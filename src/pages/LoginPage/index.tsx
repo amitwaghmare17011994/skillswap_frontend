@@ -40,7 +40,7 @@ export default function LoginPage() {
     }
   };
   return (
-    <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 px-4 py-8">
+    <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 px-4 py-8 bg-white">
       {/* Left Illustration */}
       <div className="hidden md:flex items-center justify-center">
         <img
