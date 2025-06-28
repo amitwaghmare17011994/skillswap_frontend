@@ -32,7 +32,9 @@ export default function ProfilePage() {
       } catch (error) {
         console.error("Failed to fetch user info:", error);
       } finally {
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 2000);
       }
     })();
   }, []);
@@ -45,23 +47,66 @@ export default function ProfilePage() {
     });
     // TODO: Call updateUserInfo() API
   };
-
   if (loading) {
     return (
       <div className="flex min-h-screen flex-1 justify-center">
         <div className="flex">
-          <aside className="w-64 bg-white shadow px-4 py-6">
+          {/* Sidebar Skeleton */}
+          <aside className="w-64 bg-white shadow px-4 py-6 space-y-4">
             <div className="flex flex-col items-center gap-2">
-              <Skeleton className="h-10 w-10 rounded-full" />
+              <Skeleton className="h-16 w-16 rounded-full" />
               <Skeleton className="h-4 w-32" />
               <Skeleton className="h-3 w-24" />
             </div>
           </aside>
+
+          {/* Main Content Skeleton */}
           <section className="flex-1 bg-white shadow p-6 space-y-6 min-w-xl">
-            <Skeleton className="h-6 w-48" />
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-5 w-36" />
-            <Skeleton className="h-10 w-full" />
+            <div>
+              <Skeleton className="h-6 w-48 mb-2" />
+              <Skeleton className="h-4 w-64" />
+            </div>
+
+            <Separator />
+
+            <div>
+              <Skeleton className="h-5 w-24 mb-2" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+
+            <Separator />
+
+            <div>
+              <Skeleton className="h-5 w-36 mb-2" />
+              <div className="flex gap-2 mb-2">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-20" />
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                <Skeleton className="h-8 w-20 rounded-full" />
+                <Skeleton className="h-8 w-24 rounded-full" />
+              </div>
+            </div>
+
+            <Separator />
+
+            <div>
+              <Skeleton className="h-5 w-36 mb-2" />
+              <div className="flex gap-2 mb-2">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-20" />
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                <Skeleton className="h-8 w-16 rounded-full" />
+                <Skeleton className="h-8 w-20 rounded-full" />
+              </div>
+            </div>
+
+            <Separator className="my-4" />
+
+            <div className="flex justify-end">
+              <Skeleton className="h-10 w-24 rounded-md" />
+            </div>
           </section>
         </div>
       </div>
