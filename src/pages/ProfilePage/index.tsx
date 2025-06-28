@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { X } from "lucide-react";
 import { getUserInfo } from "@/lib/services";
@@ -119,57 +120,67 @@ export default function ProfilePage() {
         </aside>
 
         {/* Profile Form */}
-        <section className="flex-1 bg-white shadow p-6 space-y-6 min-w-xl">
-          <div>
-            <h2 className="text-xl font-semibold">Public profile</h2>
-            <p className="text-sm text-muted-foreground">
-              Add information about yourself
-            </p>
-          </div>
-
-          {/* Basics */}
-          <div>
-            <h3 className="text-md font-medium mb-2">Basics:</h3>
-            <div className="grid grid-cols-1 gap-4 mb-3">
-              <Input placeholder="Name" value={user?.name} />
-            </div>
-          </div>
-
-          {/* Skills to Teach */}
-          <div>
-            <h3 className="text-md font-medium mb-2">Skills to Teach</h3>
-            <div className="flex gap-2 mb-2">
-              <Input
-                placeholder="Add a skill..."
-                value={skillInput}
-                onChange={(e) => setSkillInput(e.target.value)}
-              />
-              <Button onClick={handleAddSkill}>Add</Button>
+        <section className="flex-1 bg-white shadow p-6 flex flex-col min-h-[600px] min-w-xl">
+          <div className="space-y-6 flex-grow">
+            <div>
+              <h2 className="text-xl font-semibold">Public profile</h2>
+              <p className="text-sm text-muted-foreground">
+                Add information about yourself
+              </p>
             </div>
 
-            <div className="flex flex-wrap gap-2">
-              {skills.length > 0 ? (
-                skills.map((skill, index) => (
-                  <Badge
-                    key={index}
-                    variant="secondary"
-                    className="flex items-center gap-1 pr-2"
-                  >
-                    {skill}
-                    <button
-                      className="ml-1 text-muted-foreground hover:text-red-500"
-                      onClick={() => handleRemoveSkill(skill)}
+            {/* Basics */}
+            <div>
+              <h3 className="text-md font-medium mb-2">Basics:</h3>
+              <div className="grid grid-cols-1 gap-4 mb-3">
+                <Input placeholder="Name" value={user?.name} />
+              </div>
+            </div>
+
+            {/* Skills to Teach */}
+            <div>
+              <h3 className="text-md font-medium mb-2">Skills to Teach</h3>
+              <div className="flex gap-2 mb-2">
+                <Input
+                  placeholder="Add a skill..."
+                  value={skillInput}
+                  onChange={(e) => setSkillInput(e.target.value)}
+                />
+                <Button variant={"outline"} onClick={handleAddSkill}>
+                  Add
+                </Button>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {skills.length > 0 ? (
+                  skills.map((skill, index) => (
+                    <Badge
+                      key={index}
+                      variant="secondary"
+                      className="flex items-center gap-1 pr-2"
                     >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </Badge>
-                ))
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  No skills added yet.
-                </p>
-              )}
+                      {skill}
+                      <button
+                        className="ml-1 text-muted-foreground hover:text-red-500"
+                        onClick={() => handleRemoveSkill(skill)}
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </Badge>
+                  ))
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    No skills added yet.
+                  </p>
+                )}
+              </div>
             </div>
+          </div>
+          <Separator />
+
+          {/* Save Button pinned to bottom */}
+          <div className="mt-6 flex justify-end">
+            <Button type="button">Save</Button>
           </div>
         </section>
       </div>
