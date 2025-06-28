@@ -14,6 +14,7 @@ export default function Header() {
   const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const token = localStorage.getItem("token");
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -27,18 +28,25 @@ export default function Header() {
       </Link>
 
       <nav className="flex items-center gap-6">
-        <Link
-          to="/dashboard"
-          className="text-sm font-medium hover:text-primary"
-        >
-          Dashboard
-        </Link>
-        <Link to="/skills" className="text-sm font-medium hover:text-primary">
-          Skills
-        </Link>
-        <Link to="/chat" className="text-sm font-medium hover:text-primary">
-          Chat
-        </Link>
+        {!!token && (
+          <>
+            <Link
+              to="/dashboard"
+              className="text-sm font-medium hover:text-primary"
+            >
+              Dashboard
+            </Link>
+            <Link
+              to="/skills"
+              className="text-sm font-medium hover:text-primary"
+            >
+              Skills
+            </Link>
+            <Link to="/chat" className="text-sm font-medium hover:text-primary">
+              Chat
+            </Link>
+          </>
+        )}
 
         {user?.photoURL && (
           <DropdownMenu>
