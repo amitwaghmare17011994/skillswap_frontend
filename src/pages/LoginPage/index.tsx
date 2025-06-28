@@ -25,7 +25,7 @@ export default function LoginPage() {
 
       // Optional: Save token/local user
       localStorage.setItem("token", res.token);
-      localStorage.setItem("user", JSON.stringify(res.user));
+      localStorage.setItem("user", JSON.stringify(googleUser));
 
       // Redirect to dashboard
       navigate("/dashboard");

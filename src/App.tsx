@@ -12,6 +12,7 @@ import Dashboard from "./pages/DashboardPage";
 import Layout from "./components/AppLayout";
 import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import ProfilePage from "./pages/ProfilePage";
 import { useEffect } from "react";
 
 function App() {
@@ -64,6 +65,10 @@ function App() {
             {ProtectedRoute(<div className="p-4">Chat Page</div>)}
           </Layout>
         }
+      />
+      <Route
+        path="/profile"
+        element={<Layout>{ProtectedRoute(<ProfilePage />)}</Layout>}
       />
 
       <Route
