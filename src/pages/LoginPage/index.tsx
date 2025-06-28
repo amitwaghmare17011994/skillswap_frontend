@@ -18,14 +18,14 @@ export default function LoginPage() {
 
       const userPayload = {
         name: googleUser.displayName,
-        email: googleUser.email,
-        avatar: googleUser.photoURL,
+        // email: googleUser.email,
+        // avatar: googleUser.photoURL,
+        ...googleUser,
       };
       const res = await createOrLoginUser(userPayload);
-
       // Optional: Save token/local user
       localStorage.setItem("token", res.token);
-      localStorage.setItem("user", JSON.stringify(googleUser));
+      localStorage.setItem("user", JSON.stringify(res.user));
 
       // Redirect to dashboard
       navigate("/dashboard");

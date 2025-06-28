@@ -10,7 +10,7 @@ export default function Layout({ children }: { children: any }) {
 
       {/* Page Content */}
       <main>
-        <div className="min-h-screen flex  bg-white">{children}</div>
+        <div className="min-h-screen flex  bg-gray-100 p-10">{children}</div>
       </main>
     </div>
   );
