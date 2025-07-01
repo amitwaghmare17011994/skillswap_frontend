@@ -21,3 +21,11 @@ export const getUserInfo = async () => {
     throw error;
   }
 };
+
+export const saveProfile = async (userProfile: any) => {
+  const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const response = await api.put(`/users/${storedUser._id}`, {
+    ...userProfile,
+  });
+  return response.data;
+};

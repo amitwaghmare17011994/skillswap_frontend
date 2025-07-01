@@ -1,3 +1,4 @@
+import { getUserInfo, saveProfile } from "@/lib/services";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -5,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import SkillManager from "./SkillManager";
-import { getUserInfo } from "@/lib/services";
 
 type User = {
   photoURL: string;
@@ -39,13 +39,14 @@ export default function ProfilePage() {
     })();
   }, []);
 
-  const handleSave = () => {
-    console.log("Saved user data:", {
+  const handleSave = async () => {
+    await saveProfile({
       ...user,
       skillsToTeach: teachSkills,
+      // .map((i) => ({ name: i }))
       skillsToLearn: learnSkills,
+      // .map((i) => ({ name: i }))
     });
-    // TODO: Call updateUserInfo() API
   };
   if (loading) {
     return (
