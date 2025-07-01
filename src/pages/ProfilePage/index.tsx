@@ -1,4 +1,5 @@
 import { getUserInfo, saveProfile } from "@/lib/services";
+import { showErrorToast, showSuccessToast } from "@/lib/toasts";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,7 @@ export default function ProfilePage() {
 
   const [teachSkills, setTeachSkills] = useState<string[]>([]);
   const [learnSkills, setLearnSkills] = useState<string[]>([]);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -40,13 +42,20 @@ export default function ProfilePage() {
   }, []);
 
   const handleSave = async () => {
-    await saveProfile({
-      ...user,
-      skillsToTeach: teachSkills,
-      // .map((i) => ({ name: i }))
-      skillsToLearn: learnSkills,
-      // .map((i) => ({ name: i }))
-    });
+    setSaving(true);
+    try {
+      await saveProfile({
+        ...user,
+        skillsToTeach: teachSkills,
+        skillsToLearn: learnSkills,
+      });
+      showSuccessToast("Profile Saved");
+    } catch (error) {
+      console.log({ error });
+      showErrorToast("Error saving profile");
+    } finally {
+      setSaving(false);
+    }
   };
   if (loading) {
     return (
@@ -175,7 +184,9 @@ export default function ProfilePage() {
           {/* Save Button */}
           <Separator className="my-4" />
           <div className="flex justify-end">
-            <Button onClick={handleSave}>Save</Button>
+            <Button onClick={handleSave}>
+              {saving ? "Saving..." : "Save"}
+            </Button>
           </div>
         </section>
       </div>
