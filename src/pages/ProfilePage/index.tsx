@@ -1,4 +1,4 @@
-import { getUserInfo, saveProfile } from "@/lib/services";
+import { getUserInfo, saveProfile, getSkills, createSkill } from "@/lib/services";
 import { showErrorToast, showSuccessToast } from "@/lib/toasts";
 import { useEffect, useState } from "react";
 
@@ -23,16 +23,21 @@ export default function ProfilePage() {
   const [teachSkills, setTeachSkills] = useState<string[]>([]);
   const [learnSkills, setLearnSkills] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
+  const [allSkills, setAllSkills] = useState<{ _id: string; name: string }[]>([]);
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await getUserInfo();
+        const [res, skillsData] = await Promise.all([
+          getUserInfo(),
+          getSkills(),
+        ]);
         setUser(res);
         setTeachSkills(res.skillsToTeach || []);
         setLearnSkills(res.skillsToLearn || []);
+        setAllSkills(skillsData);
       } catch (error) {
-        console.error("Failed to fetch user info:", error);
+        console.error("Failed to fetch user info or skills:", error);
       } finally {
         setTimeout(() => {
           setLoading(false);
@@ -41,14 +46,33 @@ export default function ProfilePage() {
     })();
   }, []);
 
+  const handleAddSkill = async (name: string) => {
+    const created = await createSkill(name);
+    setAllSkills((prev) => [...prev, created]);
+    // Re-fetch all skills to ensure the list is up-to-date
+    try {
+      const skillsData = await getSkills();
+      setAllSkills(skillsData);
+    } catch (e) {}
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
       await saveProfile({
-        ...user,
+        ...(user || {}),
         skillsToTeach: teachSkills,
         skillsToLearn: learnSkills,
       });
+      // Re-fetch user and skills after save
+      const [userData, skillsData] = await Promise.all([
+        getUserInfo(),
+        getSkills(),
+      ]);
+      setUser(userData);
+      setTeachSkills(userData.skillsToTeach || []);
+      setLearnSkills(userData.skillsToLearn || []);
+      setAllSkills(skillsData);
       showSuccessToast("Profile Saved");
     } catch (error) {
       console.log({ error });
@@ -169,6 +193,8 @@ export default function ProfilePage() {
               title="Skills to Teach"
               skills={teachSkills}
               setSkills={setTeachSkills}
+              allSkills={allSkills}
+              onAddSkill={handleAddSkill}
             />
 
             <Separator />
@@ -178,6 +204,8 @@ export default function ProfilePage() {
               title="Skills to Learn"
               skills={learnSkills}
               setSkills={setLearnSkills}
+              allSkills={allSkills}
+              onAddSkill={handleAddSkill}
             />
           </div>
 
