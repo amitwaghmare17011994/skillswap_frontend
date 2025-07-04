@@ -1,15 +1,21 @@
 import { FaApple, FaFacebook } from "react-icons/fa";
 import { auth, provider, signInWithPopup } from "@/lib/firebase";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { Input } from "@/components/ui/input";
 import LoginIllustration from "@/assets/login-illustration.webp";
-import { createOrLoginUser } from "@/lib/services";
-import { useNavigate } from "react-router-dom";
+import { createOrLoginUser, loginUser } from "@/lib/services";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleGoogleLogin = async () => {
     try {
@@ -39,6 +45,29 @@ export default function LoginPage() {
       console.error("Google login failed", error);
     }
   };
+
+  const handleContinue = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    if (!showPassword) {
+      // Show password field
+      setShowPassword(true);
+      return;
+    }
+    // Try login
+    setLoading(true);
+    try {
+      const data = await loginUser({ email, password });
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      navigate("/dashboard");
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 px-4 py-8 bg-white">
       {/* Left Illustration */}
@@ -56,9 +85,31 @@ export default function LoginPage() {
           <h1 className="text-2xl font-bold text-gray-800 mb-4">
             Log in to continue your learning journey
           </h1>
-
-          <Input type="email" placeholder="Email" className="mb-3" />
-          <Button className="w-full">Continue with email</Button>
+          <form onSubmit={handleContinue}>
+            <Input
+              type="email"
+              placeholder="Email"
+              className="mb-3"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              disabled={showPassword}
+            />
+            {showPassword && (
+              <Input
+                type="password"
+                placeholder="Password"
+                className="mb-3"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+              />
+            )}
+            {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
+            <Button className="w-full" type="submit" disabled={loading}>
+              {loading ? "Logging in..." : showPassword ? "Login" : "Continue with email"}
+            </Button>
+          </form>
         </div>
 
         {/* Divider */}
@@ -88,10 +139,10 @@ export default function LoginPage() {
 
         {/* Footer */}
         <div className="text-sm text-gray-500 text-center pt-4">
-          Don’t have an account?{" "}
-          <a href="/signup" className="text-primary font-medium">
+          Don't have an account?{" "}
+          <Link to="/signup" className="text-primary font-medium">
             Sign up
-          </a>
+          </Link>
           <br />
           <a href="/org-login" className="text-sm text-primary underline">
             Log in with your organization
