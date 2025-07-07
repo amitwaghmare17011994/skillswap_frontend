@@ -13,6 +13,7 @@ import Layout from "./components/AppLayout";
 import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProfilePage from "./pages/ProfilePage";
+import SignUpPage from "./pages/SignUpPage";
 import { useEffect } from "react";
 
 function App() {
@@ -76,6 +77,15 @@ function App() {
         element={
           <Layout>
             {ProtectedRoute(<div className="p-4">Skills Page</div>)}
+          </Layout>
+        }
+      />
+
+      <Route
+        path="/signup"
+        element={
+          <Layout>
+            <SignUpPage />
           </Layout>
         }
       />
